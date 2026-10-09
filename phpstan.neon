@@ -1,0 +1,19 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 8
+
+    paths:
+        - src
+        - tests
+
+    tmpDir: .phpstan/cache
+
+    treatPhpDocTypesAsCertain: false
+
+    inferPrivatePropertyTypeFromConstructor: true
+
+    reportUnmatchedIgnoredErrors: false
+
+    editorUrl: "phpstorm://open?file=%f&line=%l"

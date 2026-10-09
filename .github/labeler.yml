@@ -1,0 +1,89 @@
+core:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/AadhaarOffline.php
+                - src/Contracts/**
+                - src/Data/**
+                - src/Enums/**
+
+security:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/Security/**
+
+parsing:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/Parsers/**
+
+validation:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/Rules/**
+                - src/Casts/**
+                - src/Support/**
+
+service-provider:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/AadhaarOfflineServiceProvider.php
+
+config:
+    - changed-files:
+          - any-glob-to-any-file:
+                - config/aadhaar-offline.php
+
+events:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/Events/**
+
+console:
+    - changed-files:
+          - any-glob-to-any-file:
+                - src/Console/**
+
+tests:
+    - changed-files:
+          - any-glob-to-any-file:
+                - tests/**
+                - src/Testing/**
+                - phpunit.xml
+                - phpunit.xml.dist
+
+documentation:
+    - changed-files:
+          - any-glob-to-any-file:
+                - README.md
+                - CHANGELOG.md
+                - docs/**
+
+ci:
+    - changed-files:
+          - any-glob-to-any-file:
+                - .github/workflows/**
+                - .github/labeler.yml
+
+tooling:
+    - changed-files:
+          - any-glob-to-any-file:
+                - rector.php
+                - phpstan.neon
+                - pint.json
+                - .editorconfig
+
+dependencies:
+    - changed-files:
+          - any-glob-to-any-file:
+                - composer.json
+                - composer.lock
+
+meta:
+    - changed-files:
+          - any-glob-to-any-file:
+                - .github/**
+                - .gitignore
+                - .gitattributes
+
+# `breaking-change` is intentionally not path-based. Apply it by hand on PRs
+# that change public behaviour; release-drafter resolves it to a major bump.

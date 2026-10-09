@@ -1,0 +1,86 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+
+# Resolve the next version from PR labels instead of always proposing a patch.
+version-resolver:
+    major:
+        labels:
+            - breaking-change
+    minor:
+        labels:
+            - feature
+            - core
+            - security
+            - parsing
+            - validation
+            - config
+            - events
+            - service-provider
+    patch:
+        labels:
+            - bug
+            - fix
+            - dependencies
+            - docs
+            - documentation
+            - ci
+            - tooling
+            - tests
+            - meta
+    default: patch
+
+categories:
+    - title: "🚀 New Features"
+      labels:
+          - feature
+          - core
+          - parsing
+          - validation
+          - config
+          - events
+
+    - title: "🔐 Security"
+      labels:
+          - security
+
+    - title: "🐛 Bug Fixes"
+      labels:
+          - bug
+          - fix
+
+    - title: "🧪 Tests"
+      labels:
+          - tests
+
+    - title: "🔧 CI / Tooling"
+      labels:
+          - ci
+          - tooling
+
+    - title: "⬆️ Dependencies"
+      labels:
+          - dependencies
+
+    - title: "📚 Documentation"
+      labels:
+          - docs
+          - documentation
+
+    - title: "🧹 Maintenance"
+      labels:
+          - meta
+
+    - title: "⚠️ Breaking Changes"
+      labels:
+          - breaking-change
+
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+
+template: |
+    ## Changes
+
+    $CHANGES
+
+exclude:
+    labels:
+        - skip-changelog
