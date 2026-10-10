@@ -1,7 +1,8 @@
 name-template: "v$RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
 
-# Resolve the next version from PR labels instead of always proposing a patch.
+# The next version and the release-note sections come from intent labels, applied
+# by hand: a path says where a change is (see labeler.yml), not what it does.
 version-resolver:
     major:
         labels:
@@ -9,53 +10,28 @@ version-resolver:
     minor:
         labels:
             - feature
-            - core
-            - security
-            - parsing
-            - validation
-            - config
-            - events
-            - service-provider
     patch:
         labels:
             - bug
-            - fix
-            - dependencies
-            - docs
-            - documentation
-            - ci
-            - tooling
-            - tests
-            - meta
+            - security
     default: patch
 
 categories:
-    - title: "🚀 New Features"
+    - title: "⚠️ Breaking Changes"
       labels:
-          - feature
-          - core
-          - parsing
-          - validation
-          - config
-          - events
+          - breaking-change
 
     - title: "🔐 Security"
       labels:
           - security
 
+    - title: "🚀 New Features"
+      labels:
+          - feature
+
     - title: "🐛 Bug Fixes"
       labels:
           - bug
-          - fix
-
-    - title: "🧪 Tests"
-      labels:
-          - tests
-
-    - title: "🔧 CI / Tooling"
-      labels:
-          - ci
-          - tooling
 
     - title: "⬆️ Dependencies"
       labels:
@@ -63,16 +39,15 @@ categories:
 
     - title: "📚 Documentation"
       labels:
-          - docs
           - documentation
 
     - title: "🧹 Maintenance"
+      collapse-after: 5
       labels:
+          - tests
+          - ci
+          - tooling
           - meta
-
-    - title: "⚠️ Breaking Changes"
-      labels:
-          - breaking-change
 
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
 
@@ -81,6 +56,5 @@ template: |
 
     $CHANGES
 
-exclude:
-    labels:
-        - skip-changelog
+exclude-labels:
+    - skip-changelog

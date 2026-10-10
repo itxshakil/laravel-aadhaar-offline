@@ -91,25 +91,20 @@ The tests assert shapes only, so failures never print personal data.
 
 ### Label Guidance (for Automatic Changelog)
 
-Your PR labels determine how changes are grouped in release notes:
+Release notes and the next version number come from **intent labels**, which a maintainer applies by hand:
 
-| Label              | Purpose / Changelog Category       |
-| ------------------ | ---------------------------------- |
-| `feature` / `core` | New features / core API            |
-| `security`         | Signature, parsing, hardening      |
-| `parsing`          | ZIP / XML readers, data objects    |
-| `validation`       | Rules and casts                    |
-| `config`           | Configuration updates              |
-| `breaking-change`  | ⚠️ Breaking changes                |
-| `tests`            | 🧪 Test additions                  |
-| `ci` / `tooling`   | 🔧 CI or tooling updates           |
-| `dependencies`     | ⬆️ Dependency updates              |
-| `documentation`    | 📝 Docs updates                    |
-| `meta`             | 🧹 Maintenance / housekeeping      |
+| Label             | Effect                                          |
+| ----------------- | ----------------------------------------------- |
+| `breaking-change` | ⚠️ Breaking Changes, next major version         |
+| `feature`         | 🚀 New Features, next minor version             |
+| `security`        | 🔐 Security                                     |
+| `bug`             | 🐛 Bug Fixes                                    |
+| `dependencies`    | ⬆️ Dependencies (Dependabot adds it)            |
+| `documentation`   | 📚 Documentation                                |
+| `skip-changelog`  | Left out of the release notes                   |
 
-> The **Release Drafter** workflow uses these labels to generate automatic release notes grouped by category.
-
----
+Area labels (`core`, `parsing`, `verification`, `validation`, `config`, `events`, `console`, `service-provider`, `tests`, `ci`, `tooling`, `meta`) are added automatically from the changed paths.
+They are for triage only: a path says where a change is, not what it does.
 
 ## License
 

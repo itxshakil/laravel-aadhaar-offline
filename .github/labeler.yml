@@ -5,8 +5,10 @@ core:
                 - src/Contracts/**
                 - src/Data/**
                 - src/Enums/**
+                - src/Exceptions/**
+                - src/Facades/**
 
-security:
+verification:
     - changed-files:
           - any-glob-to-any-file:
                 - src/Security/**
@@ -27,6 +29,7 @@ service-provider:
     - changed-files:
           - any-glob-to-any-file:
                 - src/AadhaarOfflineServiceProvider.php
+                - resources/**
 
 config:
     - changed-files:
@@ -85,5 +88,7 @@ meta:
                 - .gitignore
                 - .gitattributes
 
-# `breaking-change` is intentionally not path-based. Apply it by hand on PRs
-# that change public behaviour; release-drafter resolves it to a major bump.
+# These are area labels for triage only. Release notes and the next version come
+# from intent labels applied by hand (see release-drafter.yml): feature, bug,
+# security, breaking-change, skip-changelog. A path says where a change is, not
+# what it does: a refactor in src/Security is not a security fix.
