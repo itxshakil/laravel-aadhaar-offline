@@ -15,13 +15,12 @@ Closes #
 
 ## Checklist
 
-- [ ] My code follows the project coding standards (`composer lint`)
-- [ ] I have run static analysis and it passes (`composer analyse`)
+- [ ] My code follows the project coding standards and static analysis passes (`composer lint`)
 - [ ] I have added or updated tests that cover my changes
 - [ ] All existing and new tests pass (`composer test`)
-- [ ] I have updated the `CHANGELOG.md` with a summary of my changes
 - [ ] I have updated relevant documentation in `docs/` or `README.md` if needed
 - [ ] I have run the full QA pipeline (`composer qa`)
+- [ ] This PR contains no real Aadhaar data, files, QR codes or share codes (tests use synthetic fixtures)
 
 ## Additional Notes
 

@@ -1,0 +1,59 @@
+name: Bug report
+description: Something doesn't work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never attach or paste a real Offline e-KYC file, XML, Secure QR code, Aadhaar number, name, photo or share code.**
+        Issues are public. Use `php artisan aadhaar-offline:check`, which prints no personal data, or reproduce with synthetic data from `AadhaarOffline::fake()` or `OfflineKycFactory`.
+        Security issues go to a [private advisory](https://github.com/itxshakil/laravel-aadhaar-offline/security/advisories/new) instead.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Personal data
+      options:
+        - label: This report contains no real Aadhaar data, files, QR codes or share codes.
+          required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Package, Laravel and PHP versions
+      placeholder: laravel-aadhaar-offline 0.1.0, Laravel 13.2, PHP 8.4
+    validations:
+      required: true
+  - type: dropdown
+    id: payload
+    attributes:
+      label: Payload type
+      options:
+        - Offline e-KYC ZIP
+        - Offline e-KYC XML (e.g. from a KYC vendor)
+        - Secure QR code
+        - Not payload-related
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: check
+    attributes:
+      label: aadhaar-offline:check output
+      description: "`php artisan aadhaar-offline:check <file>`. It prints only masked and structural data, but read it before pasting."
+      render: text
+  - type: textarea
+    id: certs
+    attributes:
+      label: aadhaar-offline:certs output
+      description: Subjects, fingerprints and expiry dates of your trusted certificates. Paths can be shortened.
+      render: text
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A failing test using `AadhaarOffline::fake()` or `OfflineKycFactory` is ideal.

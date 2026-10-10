@@ -17,7 +17,9 @@ This package decides whether identity documents can be trusted, so a signature b
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-If you discover a security vulnerability, please send an e-mail to the maintainer via the contact information on the [GitHub profile](https://github.com/itxshakil). You should receive a response within 48 hours. If for some reason you do not, please follow up to ensure we received your original message.
+Report it privately through [GitHub's private vulnerability reporting](https://github.com/itxshakil/laravel-aadhaar-offline/security/advisories/new).
+You should receive a response within 48 hours.
+If you can't use GitHub, contact the maintainer through the details on the [GitHub profile](https://github.com/itxshakil).
 
 Please include as much of the following information as possible to help us better understand and resolve the issue:
 
