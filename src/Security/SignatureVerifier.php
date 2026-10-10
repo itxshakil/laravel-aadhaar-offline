@@ -145,7 +145,8 @@ final readonly class SignatureVerifier
             throw new InvalidSignatureException('The XML signature must cover the whole document.');
         }
 
-        $algorithm = (string) $xpath->evaluate('string(./ds:SignedInfo/ds:SignatureMethod/@Algorithm)', $signature);
+        $algorithm = $xpath->evaluate('string(./ds:SignedInfo/ds:SignatureMethod/@Algorithm)', $signature);
+        $algorithm = is_string($algorithm) ? $algorithm : '';
 
         if (! in_array($algorithm, $this->allowedAlgorithms, true)) {
             throw new InvalidSignatureException('The XML signature uses an algorithm that is not allowed.');

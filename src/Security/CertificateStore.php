@@ -61,7 +61,7 @@ final class CertificateStore
         // Suppress the PHP warning; an unreadable certificate is reported as a ConfigurationException below.
         $certificate = @openssl_x509_read($contents);
 
-        if ($certificate === false || ! openssl_x509_export($certificate, $pem)) {
+        if ($certificate === false || ! openssl_x509_export($certificate, $pem) || ! is_string($pem)) {
             throw new ConfigurationException("The UIDAI certificate [{$source}] could not be read.");
         }
 
@@ -77,9 +77,12 @@ final class CertificateStore
     {
         $now ??= new DateTimeImmutable();
         $parsed = openssl_x509_parse($pem);
-        $validFrom = is_array($parsed) && isset($parsed['validFrom_time_t']) ? new DateTimeImmutable('@' . $parsed['validFrom_time_t']) : null;
-        $validTo = is_array($parsed) && isset($parsed['validTo_time_t']) ? new DateTimeImmutable('@' . $parsed['validTo_time_t']) : null;
-        $subject = is_array($parsed) && isset($parsed['subject']['CN']) ? (string) $parsed['subject']['CN'] : 'unknown';
+        $parsed = is_array($parsed) ? $parsed : [];
+        $validFrom = self::timestamp($parsed['validFrom_time_t'] ?? null);
+        $validTo = self::timestamp($parsed['validTo_time_t'] ?? null);
+        $subjectFields = $parsed['subject'] ?? null;
+        // CN is an array when a certificate has several; there is no single name to show then.
+        $subject = is_array($subjectFields) && is_string($subjectFields['CN'] ?? null) ? $subjectFields['CN'] : 'unknown';
         $fingerprint = (string) openssl_x509_fingerprint($pem, 'sha256');
 
         return [
@@ -125,6 +128,11 @@ final class CertificateStore
             static fn (array $certificate): array => self::describePem($certificate['pem'], $certificate['source'], $now),
             $this->load(),
         );
+    }
+
+    private static function timestamp(mixed $value): ?DateTimeImmutable
+    {
+        return is_int($value) ? new DateTimeImmutable('@' . $value) : null;
     }
 
     /**

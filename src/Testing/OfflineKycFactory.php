@@ -30,8 +30,8 @@ final class OfflineKycFactory
      */
     public static function make(array $attributes = [], ?Verifier $verifier = null): OfflineKyc
     {
-        $shareCode = (string) ($attributes['share_code'] ?? '1234');
-        $lastFour = (string) ($attributes['last_four'] ?? '1234');
+        $shareCode = self::text($attributes['share_code'] ?? null) ?? '1234';
+        $lastFour = self::text($attributes['last_four'] ?? null) ?? '1234';
         $lastDigit = (int) mb_substr($lastFour, -1);
 
         $generatedAt = $attributes['generated_at'] ?? new DateTimeImmutable('now', new DateTimeZone(OfflineKyc::TIMEZONE));
@@ -58,10 +58,10 @@ final class OfflineKycFactory
 
         return new OfflineKyc(
             referenceId: $lastFour . $generatedAt->format('YmdHisv'),
-            name: array_key_exists('name', $attributes) ? self::nullableString($attributes['name']) : 'Test Resident',
-            dateOfBirth: array_key_exists('dob', $attributes) ? self::nullableString($attributes['dob']) : '01-01-1990',
-            gender: $gender instanceof Gender ? $gender : Gender::tryFrom((string) $gender),
-            address: $address instanceof Address ? $address : Address::fromUidaiAttributes(array_map(strval(...), (array) $address)),
+            name: array_key_exists('name', $attributes) ? self::text($attributes['name']) : 'Test Resident',
+            dateOfBirth: array_key_exists('dob', $attributes) ? self::text($attributes['dob']) : '01-01-1990',
+            gender: $gender instanceof Gender ? $gender : Gender::tryFrom(self::text($gender) ?? ''),
+            address: self::address($address),
             photo: is_string($photo) && $photo !== '' ? new Photo($photo) : null,
             mobileHash: is_string($mobile) ? HashMatcher::hash((string) HashMatcher::normalizeMobile($mobile), $shareCode, $lastDigit) : null,
             emailHash: is_string($email) ? HashMatcher::hash($email, $shareCode, $lastDigit) : null,
@@ -70,8 +70,31 @@ final class OfflineKycFactory
         );
     }
 
-    private static function nullableString(mixed $value): ?string
+    /**
+     * A scalar attribute as text; null for null or anything that is not a scalar.
+     */
+    private static function text(mixed $value): ?string
     {
-        return $value === null ? null : (string) $value;
+        return is_scalar($value) ? (string) $value : null;
+    }
+
+    /**
+     * An Address, or UIDAI-style attributes (careof, house, pc, ...) for one.
+     */
+    private static function address(mixed $address): Address
+    {
+        if ($address instanceof Address) {
+            return $address;
+        }
+
+        $attributes = [];
+
+        foreach (is_array($address) ? $address : [] as $key => $value) {
+            if (is_string($key) && is_scalar($value)) {
+                $attributes[$key] = (string) $value;
+            }
+        }
+
+        return Address::fromUidaiAttributes($attributes);
     }
 }

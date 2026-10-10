@@ -72,7 +72,8 @@ final class DecimalBytes
             return '0';
         }
 
-        $words = array_values((array) unpack('N*', str_repeat("\x00", (4 - mb_strlen($bytes, '8bit') % 4) % 4) . $bytes));
+        $unpacked = unpack('N*', str_repeat("\x00", (4 - mb_strlen($bytes, '8bit') % 4) % 4) . $bytes);
+        $words = is_array($unpacked) ? array_values(array_filter($unpacked, is_int(...))) : [];
         $limbs = [];
 
         // Long division by 10^9: each pass yields the next least significant 9 digits.
@@ -81,7 +82,7 @@ final class DecimalBytes
             $quotient = [];
 
             foreach ($words as $word) {
-                $current = $remainder * self::WORD_BASE + (int) $word;
+                $current = $remainder * self::WORD_BASE + $word;
                 $digit = intdiv($current, self::LIMB_BASE);
                 $remainder = $current % self::LIMB_BASE;
 

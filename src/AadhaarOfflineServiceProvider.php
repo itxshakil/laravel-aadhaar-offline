@@ -44,12 +44,12 @@ class AadhaarOfflineServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(CertificateStore::class, fn (Application $app): CertificateStore => CertificateStore::fromPaths(
-            array_values(array_map(strval(...), (array) $this->config('certificates', []))),
+            $this->strings('certificates', []),
         ));
 
         $this->app->singleton(SignatureVerifier::class, fn (Application $app): SignatureVerifier => new SignatureVerifier(
             $app->make(CertificateStore::class),
-            array_values(array_map(strval(...), (array) $this->config('algorithms', SignatureVerifier::DEFAULT_ALGORITHMS))),
+            $this->strings('algorithms', SignatureVerifier::DEFAULT_ALGORITHMS),
             $this->limit('max_xml_bytes'),
         ));
 
@@ -86,7 +86,7 @@ class AadhaarOfflineServiceProvider extends ServiceProvider
             certificates: $app->make(CertificateStore::class),
             filesystem: $app->make(FilesystemFactory::class),
             photoDisk: is_string($disk = $this->config('photo.disk')) ? $disk : null,
-            photoDirectory: (string) $this->config('photo.directory', 'aadhaar-offline/photos'),
+            photoDirectory: is_string($directory = $this->config('photo.directory')) ? $directory : 'aadhaar-offline/photos',
             qrParser: new SecureQrParser(),
         ));
 
@@ -150,6 +150,19 @@ class AadhaarOfflineServiceProvider extends ServiceProvider
         $details['Max age (XML / QR)'] = ($xmlAge === null ? 'none' : $xmlAge . ' days') . ' / ' . ($qrAge === null ? 'none' : $qrAge . ' days');
 
         return $details;
+    }
+
+    /**
+     * A config value that holds a list of strings; anything that is not a string is ignored.
+     *
+     * @param  list<string> $default
+     * @return list<string>
+     */
+    private function strings(string $key, array $default): array
+    {
+        $value = $this->config($key, $default);
+
+        return array_values(array_filter(is_array($value) ? $value : [$value], is_string(...)));
     }
 
     private function config(string $key, mixed $default = null): mixed

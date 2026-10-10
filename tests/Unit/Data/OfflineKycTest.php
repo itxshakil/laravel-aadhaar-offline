@@ -119,7 +119,9 @@ class OfflineKycTest extends TestCase
         }
 
         $this->assertArrayNotHasKey('photo', $kyc->toArray());
-        $this->assertStringStartsWith('data:image/jpeg', (string) $kyc->toArray(withPhoto: true)['photo']);
+        $photo = $kyc->toArray(withPhoto: true)['photo'];
+        $this->assertIsString($photo);
+        $this->assertStringStartsWith('data:image/jpeg', $photo);
     }
 
     public function test_it_exposes_demographics(): void

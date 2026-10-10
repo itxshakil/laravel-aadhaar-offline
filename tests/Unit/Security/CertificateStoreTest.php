@@ -92,11 +92,12 @@ class CertificateStoreTest extends TestCase
         $this->assertInstanceOf(OpenSSLAsymmetricKey::class, $key);
         $csr = openssl_csr_new(['commonName' => 'der-test'], $key, $config);
         $this->assertIsNotBool($csr);
+        $this->assertInstanceOf(OpenSSLAsymmetricKey::class, $key); // passed by reference above
 
         for ($serial = 1; $serial <= 20_000; $serial++) {
             $certificate = openssl_csr_sign($csr, null, $key, 1, $config, $serial);
 
-            if ($certificate === false || ! openssl_x509_export($certificate, $pem)) {
+            if ($certificate === false || ! openssl_x509_export($certificate, $pem) || ! is_string($pem)) {
                 $this->fail('Could not sign the test certificate.');
             }
 

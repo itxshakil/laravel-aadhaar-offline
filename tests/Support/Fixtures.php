@@ -61,7 +61,8 @@ final class Fixtures
 
         $csr = openssl_csr_new(['commonName' => $name, 'organizationName' => 'Test Only'], $key, $config);
 
-        if ($csr === false || $csr === true) {
+        // $key is passed by reference, so it has to be checked again.
+        if ($csr === false || $csr === true || ! $key instanceof OpenSSLAsymmetricKey) {
             throw new RuntimeException('Could not create a test CSR.');
         }
 
@@ -71,8 +72,9 @@ final class Fixtures
             throw new RuntimeException('Could not self-sign a test certificate.');
         }
 
-        openssl_pkey_export($key, $keyPem);
-        openssl_x509_export($certificate, $certPem);
+        if (! openssl_pkey_export($key, $keyPem) || ! openssl_x509_export($certificate, $certPem) || ! is_string($keyPem) || ! is_string($certPem)) {
+            throw new RuntimeException('Could not export the test key pair.');
+        }
 
         return self::$identities[$cacheKey] = ['key' => $keyPem, 'cert' => $certPem];
     }
@@ -84,8 +86,8 @@ final class Fixtures
      */
     public static function xml(array $overrides = []): string
     {
-        $shareCode = (string) ($overrides['share_code'] ?? self::SHARE_CODE);
-        $lastFour = (string) ($overrides['last_four'] ?? '5678');
+        $shareCode = self::text($overrides['share_code'] ?? null, self::SHARE_CODE);
+        $lastFour = self::text($overrides['last_four'] ?? null, '5678');
         $lastDigit = (int) mb_substr($lastFour, -1);
         $generatedAt = $overrides['generated_at'] ?? new DateTimeImmutable('now', new DateTimeZone('Asia/Kolkata'));
         assert($generatedAt instanceof DateTimeImmutable);
@@ -104,7 +106,7 @@ final class Fixtures
         $poi = '';
 
         foreach ($attributes as $name => $value) {
-            $poi .= ' ' . $name . '="' . htmlspecialchars((string) $value, ENT_XML1) . '"';
+            $poi .= ' ' . $name . '="' . htmlspecialchars(self::text($value), ENT_XML1) . '"';
         }
 
         $photo = $overrides['photo'] ?? 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
@@ -114,7 +116,7 @@ final class Fixtures
             . '<UidData>'
             . '<Poi' . $poi . '/>'
             . '<Poa careof="D/O: Ramesh Verma" country="India" dist="New Delhi" house="221B" landmark="Near Park" loc="Lajpat Nagar" pc="110024" po="Lajpat Nagar" state="Delhi" street="Ring Road" subdist="Defence Colony" vtc="New Delhi"/>'
-            . '<Pht>' . $photo . '</Pht>'
+            . '<Pht>' . self::text($photo) . '</Pht>'
             . '</UidData>'
             . '</OfflinePaperlessKyc>';
     }
@@ -172,7 +174,7 @@ final class Fixtures
      */
     public static function secureQrBytes(array $overrides = [], ?string $version = 'V2', string $identity = 'uidai-test'): string
     {
-        $lastFour = (string) ($overrides['last_four'] ?? '5678');
+        $lastFour = self::text($overrides['last_four'] ?? null, '5678');
         $lastDigit = (int) mb_substr($lastFour, -1);
         $generatedAt = $overrides['generated_at'] ?? new DateTimeImmutable('now', new DateTimeZone('Asia/Kolkata'));
         assert($generatedAt instanceof DateTimeImmutable);
@@ -196,15 +198,15 @@ final class Fixtures
             $fields[] = is_string($mobile) ? mb_substr($mobile, -4) : '';
         }
 
-        $data = implode('', array_map(static fn (mixed $field): string => mb_convert_encoding((string) $field, 'ISO-8859-1', 'UTF-8') . "\xFF", $fields));
-        $data .= (string) ($overrides['photo'] ?? self::QR_PHOTO);
+        $data = implode('', array_map(static fn (mixed $field): string => mb_convert_encoding(self::text($field), 'ISO-8859-1', 'UTF-8') . "\xFF", $fields));
+        $data .= self::text($overrides['photo'] ?? null, self::QR_PHOTO);
 
         if ($version === null) {
             $data .= is_string($email) ? (string) hex2bin(HashMatcher::hash($email, '', $lastDigit)) : '';
             $data .= is_string($mobile) ? (string) hex2bin(HashMatcher::hash($mobile, '', $lastDigit)) : '';
         }
 
-        if (! openssl_sign($data, $signature, self::identity($identity)['key'], OPENSSL_ALGO_SHA256)) {
+        if (! openssl_sign($data, $signature, self::identity($identity)['key'], OPENSSL_ALGO_SHA256) || ! is_string($signature)) {
             throw new RuntimeException('Could not sign the test Secure QR payload.');
         }
 
@@ -303,6 +305,14 @@ final class Fixtures
         register_shutdown_function(static fn () => self::remove($directory));
 
         return self::$directory = $directory;
+    }
+
+    /**
+     * A scalar override as text; anything else becomes the default.
+     */
+    private static function text(mixed $value, string $default = ''): string
+    {
+        return is_scalar($value) ? (string) $value : $default;
     }
 
     private static function tempPath(string $extension): string
