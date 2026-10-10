@@ -21,7 +21,7 @@ class AddCertificateCommandTest extends TestCase
     {
         parent::setUp();
 
-        $this->directory = sys_get_temp_dir() . '/aadhaar-offline-tests/certs-' . bin2hex(random_bytes(4));
+        $this->directory = Fixtures::directory() . '/certs-' . bin2hex(random_bytes(4));
         $this->environmentFile = Fixtures::file("APP_NAME=Test\nAADHAAR_OFFLINE_CERTIFICATES=/old/uidai.cer\nAPP_DEBUG=true\n", 'env');
         $this->app?->loadEnvironmentFrom(basename($this->environmentFile));
         $this->app?->useEnvironmentPath(dirname($this->environmentFile));

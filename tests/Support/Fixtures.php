@@ -37,6 +37,8 @@ final class Fixtures
     /** @var array<string, array{key: string, cert: string}> */
     private static array $identities = [];
 
+    private static ?string $directory = null;
+
     /**
      * A cached RSA key pair and self-signed certificate.
      *
@@ -283,14 +285,45 @@ final class Fixtures
         return self::file((string) base64_decode((string) $body, true), 'cer');
     }
 
-    private static function tempPath(string $extension): string
+    /**
+     * A temporary directory for this test process, removed when the process exits.
+     */
+    public static function directory(): string
     {
-        $directory = sys_get_temp_dir() . '/aadhaar-offline-tests';
-
-        if (! is_dir($directory)) {
-            mkdir($directory, 0o700, true);
+        if (self::$directory !== null) {
+            return self::$directory;
         }
 
-        return $directory . '/' . bin2hex(random_bytes(8)) . '.' . $extension;
+        $directory = sys_get_temp_dir() . '/aadhaar-offline-tests/' . getmypid() . '-' . bin2hex(random_bytes(4));
+
+        if (! mkdir($directory, 0o700, true) && ! is_dir($directory)) {
+            throw new RuntimeException("Could not create the test directory [{$directory}].");
+        }
+
+        register_shutdown_function(static fn () => self::remove($directory));
+
+        return self::$directory = $directory;
+    }
+
+    private static function tempPath(string $extension): string
+    {
+        return self::directory() . '/' . bin2hex(random_bytes(8)) . '.' . $extension;
+    }
+
+    private static function remove(string $path): void
+    {
+        if (is_dir($path) && ! is_link($path)) {
+            foreach (array_diff((array) scandir($path), ['.', '..']) as $entry) {
+                self::remove($path . '/' . $entry);
+            }
+
+            rmdir($path);
+
+            return;
+        }
+
+        if (file_exists($path) || is_link($path)) {
+            unlink($path);
+        }
     }
 }
