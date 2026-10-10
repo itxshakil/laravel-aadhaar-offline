@@ -6,7 +6,7 @@ namespace Shakil\AadhaarOffline\Tests\Feature;
 
 use DateTimeImmutable;
 use Illuminate\Testing\PendingCommand;
-use Shakil\AadhaarOffline\Tests\Support\Fixtures;
+use Shakil\AadhaarOffline\Testing\Fixtures;
 use Shakil\AadhaarOffline\Tests\TestCase;
 
 class CheckPayloadCommandTest extends TestCase

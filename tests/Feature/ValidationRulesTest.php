@@ -10,7 +10,7 @@ use LogicException;
 use Shakil\AadhaarOffline\Rules\ValidAadhaarNumber;
 use Shakil\AadhaarOffline\Rules\ValidOfflineKycZip;
 use Shakil\AadhaarOffline\Support\Verhoeff;
-use Shakil\AadhaarOffline\Tests\Support\Fixtures;
+use Shakil\AadhaarOffline\Testing\Fixtures;
 use Shakil\AadhaarOffline\Tests\TestCase;
 
 class ValidationRulesTest extends TestCase

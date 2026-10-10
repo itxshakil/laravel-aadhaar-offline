@@ -21,6 +21,9 @@
 
 **Laravel Aadhaar Offline** reads and verifies Aadhaar Offline e-KYC files and Aadhaar Secure QR codes in your own Laravel app. It opens the share-code-protected ZIP, **checks UIDAI's digital signature locally**, and gives you a typed object with the resident's name, date of birth, gender, address and photo. It can also confirm a mobile number or email against the hashes in the file, and it never needs the full Aadhaar number.
 
+It is the Laravel integration for [itxshakil/aadhaar-offline](https://github.com/itxshakil/aadhaar-offline), the framework-agnostic package that does the parsing and signature checks, and adds a facade, validation rules, Artisan commands, events, an upload form and a test fake.
+Not using Laravel? Install `itxshakil/aadhaar-offline` directly.
+
 **Don't trust the XML, verify it.** Many integrations accept whatever XML a KYC vendor returns, or whatever ZIP a user uploads, without checking the signature. Anyone can edit an XML file. This package checks the signature against UIDAI's public certificate before you rely on any of the data.
 
 > **Status: 0.x.** The test suite uses synthetic, self-signed fixtures.
@@ -69,7 +72,7 @@
 - 🔔 **Events**: `OfflineKycVerified` / `OfflineKycRejected`, carrying no personal data.
 - 🧪 **Fake & assert**: `AadhaarOffline::fake()` plus a factory for synthetic payloads.
 - 🛡️ **XXE-hardened**: DOCTYPE/ENTITY declarations are refused and network access is disabled.
-- 🔍 **PHPStan level 8**: fully typed, no baseline.
+- 🔍 **PHPStan max level** with strict rules: fully typed, no baseline.
 
 ---
 
@@ -239,7 +242,7 @@ try {
 }
 ```
 
-> **How it works in detail:** [docs/verification.md](docs/verification.md)
+> **How it works in detail:** [verification in itxshakil/aadhaar-offline](https://github.com/itxshakil/aadhaar-offline/blob/main/docs/verification.md)
 
 ---
 
@@ -316,7 +319,7 @@ $request->validate(['aadhaar_zip' => ['bail', 'required', 'file', $rule = new Va
 $kyc = $rule->kyc();
 ```
 
-For format-only checks without Laravel, use `Shakil\AadhaarOffline\Support\AadhaarNumber::isValid()`, `::mask()` and `Verhoeff::validate()`.
+For format-only checks outside validation, use `Shakil\AadhaarOffline\Support\AadhaarNumber::isValid()`, `::mask()` and `Verhoeff::validate()` from the core package.
 
 ---
 
@@ -395,7 +398,7 @@ public function test_forged_file_is_rejected(): void
 }
 ```
 
-Build payloads directly with `Shakil\AadhaarOffline\Testing\OfflineKycFactory::make([...])`.
+Build payloads directly with `Shakil\AadhaarOffline\Testing\OfflineKycFactory::make([...])`, or signed synthetic ZIPs, XML and QR codes with `Shakil\AadhaarOffline\Testing\Fixtures`; both come from `itxshakil/aadhaar-offline`.
 
 > **Full testing guide:** [docs/testing.md](docs/testing.md)
 

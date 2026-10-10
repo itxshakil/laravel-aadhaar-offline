@@ -47,7 +47,7 @@ If you have a suggestion for the project:
 
 * Follow PSR-12 coding standards
 * Write PHPUnit tests for new features
-* **Never commit real Aadhaar data, Offline e-KYC files or private keys.** Use the synthetic fixtures in `tests/Support/Fixtures.php`
+* **Never commit real Aadhaar data, Offline e-KYC files or private keys.** Use the synthetic payloads from `Shakil\AadhaarOffline\Testing\Fixtures`
 * Maintain existing test coverage
 * Document new code using PHPDoc blocks
 * Keep the codebase clean and maintainable
@@ -65,7 +65,6 @@ Available composer scripts:
 | ------------------------ | ------------------------------------------------ |
 | `composer test`          | Run the full PHPUnit test suite                  |
 | `composer test:coverage` | Run tests with HTML + Clover coverage output     |
-| `composer test:real`     | Opt-in tests against your own real e-KYC file    |
 | `composer analyse`       | Run PHPStan static analysis                      |
 | `composer lint`          | Check code style with Pint (no changes)          |
 | `composer lint:fix`      | Auto-fix code style with Rector + Pint           |
@@ -74,11 +73,15 @@ Available composer scripts:
 
 ### Testing with a real file
 
-`composer test:real` runs `tests/Real` against your own Offline e-KYC download.
-Set `AADHAAR_OFFLINE_REAL_FILE`, `AADHAAR_OFFLINE_REAL_SHARE_CODE` and `AADHAAR_OFFLINE_REAL_CERTIFICATES` first, and optionally `AADHAAR_OFFLINE_REAL_MOBILE`.
-For a Secure QR code, save the scanned digits to a text file and set `AADHAAR_OFFLINE_REAL_QR_FILE`.
-Keep the file outside the repository; `*.zip` and `offlineaadhaar*` are gitignored as a safety net.
-The tests assert shapes only, so failures never print personal data.
+Run the Artisan check on your own Offline e-KYC download or a text file with scanned Secure QR digits:
+
+```bash
+AADHAAR_OFFLINE_CERTIFICATES=/path/to/uidai_offline_publickey_2026.cer vendor/bin/testbench aadhaar-offline:check /path/to/offlineaadhaar.zip
+```
+
+It prints only masked and structural data.
+The opt-in `composer test:real` suite lives in [itxshakil/aadhaar-offline](https://github.com/itxshakil/aadhaar-offline), where the parsing and verification code is.
+Keep real files outside the repository; `*.zip` and `offlineaadhaar*` are gitignored as a safety net.
 
 ## Pull Request Guidelines
 

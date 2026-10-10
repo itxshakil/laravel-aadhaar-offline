@@ -11,22 +11,21 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 
 /**
- * Structural rules that keep the package usable outside Laravel and free of debug leftovers.
+ * Structural rules: the framework-agnostic code lives in itxshakil/aadhaar-offline, and
+ * this package stays free of debug leftovers.
  */
 class ArchitectureTest extends TestCase
 {
-    /** Folders that must work without Laravel. */
+    /** Folders that belong to itxshakil/aadhaar-offline, which shares this namespace. */
     private const array CORE = ['Data', 'Parsers', 'Security', 'Support', 'Enums', 'Contracts', 'Exceptions'];
 
     /**
      * @return iterable<string, array{string}>
      */
-    public static function coreFiles(): iterable
+    public static function coreFolders(): iterable
     {
         foreach (self::CORE as $folder) {
-            foreach (self::phpFiles(__DIR__ . '/../../../src/' . $folder) as $path) {
-                yield self::relative($path) => [$path];
-            }
+            yield 'src/' . $folder => [$folder];
         }
     }
 
@@ -40,10 +39,20 @@ class ArchitectureTest extends TestCase
         }
     }
 
-    #[DataProvider('coreFiles')]
-    public function test_core_code_does_not_depend_on_laravel(string $path): void
+    /**
+     * A copy here would shadow the core package's classes under the same namespace.
+     */
+    #[DataProvider('coreFolders')]
+    public function test_core_code_is_not_duplicated_here(string $folder): void
     {
-        $this->assertDoesNotMatchRegularExpression('/\bIlluminate\\\\/', (string) file_get_contents($path));
+        $this->assertDirectoryDoesNotExist(__DIR__ . '/../../../src/' . $folder);
+    }
+
+    public function test_the_core_reader_is_not_duplicated_here(): void
+    {
+        $this->assertFileDoesNotExist(__DIR__ . '/../../../src/OfflineKycReader.php');
+        $this->assertFileDoesNotExist(__DIR__ . '/../../../src/Testing/OfflineKycFactory.php');
+        $this->assertFileDoesNotExist(__DIR__ . '/../../../src/Testing/Fixtures.php');
     }
 
     #[DataProvider('sourceFiles')]

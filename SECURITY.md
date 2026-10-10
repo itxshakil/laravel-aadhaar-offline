@@ -12,7 +12,7 @@ Only the latest minor release of 0.x receives security fixes until 1.0.0.
 
 This package decides whether identity documents can be trusted, so a signature bypass is treated as critical.
 
-**Never include real Aadhaar files, numbers or personal data in a report.** Reproduce with synthetic fixtures instead (see `tests/Support/Fixtures.php`).
+**Never include real Aadhaar files, numbers or personal data in a report.** Reproduce with synthetic fixtures instead (see `Shakil\AadhaarOffline\Testing\Fixtures` in itxshakil/aadhaar-offline).
 
 
 **Please do not report security vulnerabilities through public GitHub issues.**

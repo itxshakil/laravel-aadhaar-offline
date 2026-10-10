@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Testing\PendingCommand;
 use Shakil\AadhaarOffline\Console\Commands\AddCertificate;
 use Shakil\AadhaarOffline\Security\CertificateStore;
-use Shakil\AadhaarOffline\Tests\Support\Fixtures;
+use Shakil\AadhaarOffline\Testing\Fixtures;
 use Shakil\AadhaarOffline\Tests\TestCase;
 
 class AddCertificateCommandTest extends TestCase
