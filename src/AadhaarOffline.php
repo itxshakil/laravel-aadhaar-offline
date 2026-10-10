@@ -160,7 +160,9 @@ class AadhaarOffline
     protected function path(SplFileInfo|string $file): string
     {
         if ($file instanceof SplFileInfo) {
-            return $file->getRealPath() ?: $file->getPathname();
+            $realPath = $file->getRealPath();
+
+            return $realPath !== false ? $realPath : $file->getPathname();
         }
 
         return $file;

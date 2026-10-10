@@ -33,7 +33,8 @@ class AddCertificateCommandTest extends TestCase
             ->expectsOutputToContain('The fingerprint matches.')
             ->assertSuccessful();
 
-        $stored = glob($this->directory . '/uidai-*.pem') ?: [];
+        $stored = glob($this->directory . '/uidai-*.pem');
+        $this->assertIsArray($stored);
         $this->assertCount(1, $stored);
         $this->assertSame($this->fingerprint(), CertificateStore::describePem((string) file_get_contents($stored[0]))['fingerprint']);
         $this->assertSame(
@@ -136,7 +137,7 @@ class AddCertificateCommandTest extends TestCase
             '--fingerprint' => $fingerprint,
             '--directory' => $this->directory,
             ...$options,
-        ]));
+        ], static fn (mixed $value): bool => $value !== null));
         $this->assertInstanceOf(PendingCommand::class, $command);
 
         return $command;

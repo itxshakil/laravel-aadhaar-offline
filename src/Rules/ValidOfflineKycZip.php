@@ -29,7 +29,7 @@ use SplFileInfo;
  */
 class ValidOfflineKycZip implements DataAwareRule, ValidationRule
 {
-    /** @var array<string, mixed> */
+    /** @var array<array-key, mixed> */
     protected array $data = [];
 
     protected ?OfflineKyc $kyc = null;
@@ -60,7 +60,7 @@ class ValidOfflineKycZip implements DataAwareRule, ValidationRule
     /**
      * Set the data under validation.
      *
-     * @param array<string, mixed> $data
+     * @param array<array-key, mixed> $data
      */
     public function setData(array $data): static
     {

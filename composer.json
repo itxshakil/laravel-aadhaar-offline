@@ -89,7 +89,7 @@
         ],
         "lint": [
             "@analyse",
-            "pint --parallel"
+            "pint --test --parallel"
         ],
         "qa": [
             "@lint",

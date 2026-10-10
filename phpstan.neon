@@ -1,5 +1,8 @@
+# The phpstan/extension-installer plugin is not used, so rule sets must be included explicitly.
 includes:
     - vendor/larastan/larastan/extension.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
 
 parameters:
     level: 8
@@ -17,3 +20,9 @@ parameters:
     reportUnmatchedIgnoredErrors: false
 
     editorUrl: "phpstorm://open?file=%f&line=%l"
+
+    ignoreErrors:
+        # $this->assert*() is idiomatic PHPUnit; strict-rules would demand self::assert*().
+        -
+            identifier: staticMethod.dynamicCall
+            path: tests/*

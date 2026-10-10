@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shakil\AadhaarOffline\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Shakil\AadhaarOffline\Exceptions\ConfigurationException;
@@ -47,7 +48,10 @@ class AddCertificate extends Command
             return rtrim($environment, "\n") . ($environment === '' ? '' : "\n") . self::ENV_KEY . '=' . self::quote($path) . "\n";
         }
 
-        $paths = array_values(array_filter(array_map(trim(...), explode(',', trim($matches[1], " \t\"'")))));
+        $paths = array_values(array_filter(
+            array_map(trim(...), explode(',', trim($matches[1], " \t\"'"))),
+            static fn (string $existing): bool => $existing !== '',
+        ));
 
         if (in_array($path, $paths, true)) {
             return $environment;
@@ -188,7 +192,9 @@ class AddCertificate extends Command
 
     private function updateEnvironment(string $path): void
     {
-        $environmentFile = $this->laravel->environmentFilePath();
+        // environmentFilePath() and configurationIsCached() live on the concrete application, not the contract.
+        $application = $this->laravel instanceof Application ? $this->laravel : null;
+        $environmentFile = $application?->environmentFilePath() ?? $this->laravel->basePath('.env');
 
         if (! is_file($environmentFile) || ! is_writable($environmentFile)) {
             $this->components->warn('No writable .env file found. Add this line yourself:');
@@ -207,7 +213,7 @@ class AddCertificate extends Command
             $this->components->info('Added to ' . self::ENV_KEY . ' in ' . basename($environmentFile) . '.');
         }
 
-        if ($this->laravel->configurationIsCached()) {
+        if ($application?->configurationIsCached() === true) {
             $this->components->warn('Your configuration is cached. Run `php artisan config:cache` to pick up the change.');
         }
     }

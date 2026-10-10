@@ -28,7 +28,9 @@ class DecimalBytesTest extends TestCase
     public function test_it_converts_known_values(string $decimal, string $bytes): void
     {
         $this->assertSame($bytes, DecimalBytes::toBytes($decimal));
-        $this->assertSame(ltrim($decimal, '0') ?: '0', DecimalBytes::fromBytes($bytes));
+        $expected = ltrim($decimal, '0');
+
+        $this->assertSame($expected === '' ? '0' : $expected, DecimalBytes::fromBytes($bytes));
     }
 
     public function test_it_round_trips_large_random_values(): void
