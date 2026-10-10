@@ -84,13 +84,13 @@ jobs:
                 exclude:
                     - { laravel: 11, php: 8.5 }
                 include:
-                    - { laravel: 11, testbench: "^9.0" }
-                    - { laravel: 12, testbench: "^10.0" }
-                    - { laravel: 13, testbench: "^11.0" }
-                    - { os: macos-latest, php: 8.3, laravel: 13, testbench: "^11.0", deps: highest }
-                    - { os: macos-latest, php: 8.5, laravel: 13, testbench: "^11.0", deps: highest }
-                    - { os: windows-latest, php: 8.3, laravel: 13, testbench: "^11.0", deps: highest }
-                    - { os: windows-latest, php: 8.5, laravel: 13, testbench: "^11.0", deps: highest }
+                    - { laravel: 11, testbench: "9.*" }
+                    - { laravel: 12, testbench: "10.*" }
+                    - { laravel: 13, testbench: "11.*" }
+                    - { os: macos-latest, php: 8.3, laravel: 13, testbench: "11.*", deps: highest }
+                    - { os: macos-latest, php: 8.5, laravel: 13, testbench: "11.*", deps: highest }
+                    - { os: windows-latest, php: 8.3, laravel: 13, testbench: "11.*", deps: highest }
+                    - { os: windows-latest, php: 8.5, laravel: 13, testbench: "11.*", deps: highest }
 
         steps:
             - uses: actions/checkout@v7
@@ -102,8 +102,9 @@ jobs:
                   tools: composer
                   coverage: none
 
+            # "N.*" instead of "^N.0": on Windows composer runs through a .bat file, and cmd eats "^".
             - name: Pin Laravel ${{ matrix.laravel }}
-              run: composer require --dev --no-update "laravel/framework:^${{ matrix.laravel }}.0" "orchestra/testbench:${{ matrix.testbench }}"
+              run: composer require --dev --no-update "laravel/framework:${{ matrix.laravel }}.*" "orchestra/testbench:${{ matrix.testbench }}"
 
             - uses: ramsey/composer-install@v3
               with:
