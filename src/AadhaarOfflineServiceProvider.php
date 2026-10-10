@@ -7,6 +7,7 @@ namespace Shakil\AadhaarOffline;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Shakil\AadhaarOffline\Console\Commands\AddCertificate;
@@ -17,6 +18,7 @@ use Shakil\AadhaarOffline\Data\OfflineKyc;
 use Shakil\AadhaarOffline\Events\OfflineKycRejected;
 use Shakil\AadhaarOffline\Events\OfflineKycVerified;
 use Shakil\AadhaarOffline\Exceptions\AadhaarOfflineException;
+use Shakil\AadhaarOffline\Exceptions\ConfigurationException;
 use Shakil\AadhaarOffline\Parsers\SecureQrParser;
 use Shakil\AadhaarOffline\Parsers\XmlParser;
 use Shakil\AadhaarOffline\Parsers\ZipReader;
@@ -105,6 +107,11 @@ class AadhaarOfflineServiceProvider extends ServiceProvider
                 ListCertificates::class,
             ]);
 
+            // AboutCommand ships with laravel/framework, not the illuminate/* components this package requires.
+            if (class_exists(AboutCommand::class)) {
+                AboutCommand::add('Aadhaar Offline', fn (): array => $this->aboutDetails());
+            }
+
             $this->publishes([
                 __DIR__ . '/../config/aadhaar-offline.php' => config_path('aadhaar-offline.php'),
             ], 'aadhaar-offline-config');
@@ -116,14 +123,33 @@ class AadhaarOfflineServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array<int, string>
+     * @return array<string, string>
      */
-    #[Override]
-    public function provides(): array
+    private function aboutDetails(): array
     {
-        return ['aadhaar-offline', AadhaarOffline::class, Verifier::class, CertificateStore::class, SignatureVerifier::class, QrSignatureVerifier::class];
+        $details = [
+            'Signature verification' => (bool) $this->config('verify_signature', true)
+                ? '<fg=green;options=bold>ENABLED</>'
+                : '<fg=red;options=bold>DISABLED</>',
+        ];
+
+        try {
+            $certificates = $this->app->make(CertificateStore::class)->describe();
+            $current = array_filter($certificates, static fn (array $certificate): bool => ! $certificate['expired']);
+            $expiries = array_filter(array_column($current, 'valid_to'));
+            sort($expiries);
+
+            $details['Certificates'] = count($current) . ' valid, ' . (count($certificates) - count($current)) . ' expired';
+            $details['Next expiry'] = $expiries === [] ? '<fg=yellow;options=bold>NONE VALID</>' : $expiries[0]->format('Y-m-d');
+        } catch (ConfigurationException) {
+            $details['Certificates'] = '<fg=yellow;options=bold>NOT CONFIGURED</>';
+        }
+
+        $xmlAge = KycVerifier::normalizeMaxAgeDays($this->config('max_age_days', 3));
+        $qrAge = KycVerifier::normalizeMaxAgeDays($this->config('secure_qr.max_age_days'));
+        $details['Max age (XML / QR)'] = ($xmlAge === null ? 'none' : $xmlAge . ' days') . ' / ' . ($qrAge === null ? 'none' : $qrAge . ' days');
+
+        return $details;
     }
 
     private function config(string $key, mixed $default = null): mixed
