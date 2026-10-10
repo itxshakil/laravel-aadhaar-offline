@@ -52,11 +52,21 @@ $kyc = OfflineKycFactory::make(['name' => 'Asha Verma', 'photo' => null]);
 
 ## Testing the real verification path
 
-The package's own suite (`tests/Support/Fixtures.php`) shows how to do this without real Aadhaar data:
+To exercise signature checks without the fake, build signed synthetic payloads with `Shakil\AadhaarOffline\Testing\Fixtures` and trust its test certificate:
 
-1. Generate an RSA key and self-signed certificate at runtime with `openssl_pkey_new()` / `openssl_csr_sign()`.
-2. Build XML in the UIDAI shape and sign it with `XMLSecurityDSig` (enveloped, `force_uri`).
-3. ZIP it with `ZipArchive::setEncryptionName()` using a share code.
-4. Point `aadhaar-offline.certificates` at the generated certificate.
+```php
+use Shakil\AadhaarOffline\Testing\Fixtures;
+
+config()->set('aadhaar-offline.certificates', [Fixtures::certificateFile()]);
+
+$this->post('/kyc', [
+    'aadhaar_zip' => new UploadedFile(Fixtures::zip(Fixtures::signedXml()), 'offline.zip', 'application/zip', null, true),
+    'share_code' => Fixtures::SHARE_CODE,
+])->assertRedirect();
+```
+
+`Fixtures::signedXml(identity: 'attacker')` signs with a different key, to test that forged files are rejected.
+Set the config before the package's services are first resolved, e.g. in `defineEnvironment()` or `setUp()`.
+See the [core testing guide](https://github.com/itxshakil/aadhaar-offline/blob/main/docs/testing.md) for Secure QR codes and age limits.
 
 **Never commit a real Offline e-KYC file**, even your own.

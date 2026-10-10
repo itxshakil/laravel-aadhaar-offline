@@ -6,7 +6,6 @@
          beStrictAboutOutputDuringTests="true"
          bootstrap="vendor/autoload.php"
          colors="true"
-         defaultTestSuite="Unit,Feature"
          failOnRisky="true"
          failOnWarning="true"
          processIsolation="false"
@@ -20,9 +19,6 @@
         </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">tests/Feature</directory>
-        </testsuite>
-        <testsuite name="Real">
-            <directory suffix="Test.php">tests/Real</directory>
         </testsuite>
     </testsuites>
     <source>

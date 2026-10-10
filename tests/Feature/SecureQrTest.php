@@ -14,7 +14,7 @@ use Shakil\AadhaarOffline\Events\OfflineKycVerified;
 use Shakil\AadhaarOffline\Exceptions\InvalidSignatureException;
 use Shakil\AadhaarOffline\Exceptions\StaleKycException;
 use Shakil\AadhaarOffline\Facades\AadhaarOffline;
-use Shakil\AadhaarOffline\Tests\Support\Fixtures;
+use Shakil\AadhaarOffline\Testing\Fixtures;
 use Shakil\AadhaarOffline\Tests\TestCase;
 
 class SecureQrTest extends TestCase

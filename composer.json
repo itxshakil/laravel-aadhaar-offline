@@ -1,6 +1,6 @@
 {
     "name": "itxshakil/laravel-aadhaar-offline",
-    "description": "Read and verify Aadhaar Offline e-KYC (share-code ZIP / signed XML) and Secure QR codes locally in Laravel: UIDAI signature checks, mobile/email hash matching, freshness rules and privacy-safe defaults.",
+    "description": "Laravel integration for itxshakil/aadhaar-offline: read and verify Aadhaar Offline e-KYC (share-code ZIP / signed XML) and Secure QR codes with a facade, validation rules, Artisan commands, events and a test fake.",
     "keywords": [
         "laravel",
         "laravel-package",
@@ -41,11 +41,6 @@
     ],
     "require": {
         "php": "^8.3",
-        "ext-dom": "*",
-        "ext-libxml": "*",
-        "ext-openssl": "*",
-        "ext-zip": "*",
-        "ext-zlib": "*",
         "illuminate/console": "^11.0|^12.0|^13.0",
         "illuminate/contracts": "^11.0|^12.0|^13.0",
         "illuminate/database": "^11.0|^12.0|^13.0",
@@ -55,7 +50,7 @@
         "illuminate/support": "^11.0|^12.0|^13.0",
         "illuminate/validation": "^11.0|^12.0|^13.0",
         "illuminate/view": "^11.0|^12.0|^13.0",
-        "robrichards/xmlseclibs": "^4.0"
+        "itxshakil/aadhaar-offline": "^0.1"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.1",
@@ -66,9 +61,6 @@
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpunit/phpunit": "^11.0|^12.0",
         "rector/rector": "^2.0"
-    },
-    "suggest": {
-        "ext-fileinfo": "Accurate MIME detection for the resident photo"
     },
     "autoload": {
         "psr-4": {
@@ -92,7 +84,6 @@
     },
     "scripts": {
         "test": "phpunit",
-        "test:real": "phpunit --testsuite Real",
         "test:coverage": "phpunit --coverage-clover build/coverage/clover.xml --coverage-html build/coverage/html",
         "analyse": "phpstan analyse --memory-limit=1G",
         "rector": "rector process",
@@ -111,7 +102,6 @@
     },
     "scripts-descriptions": {
         "test": "Run the PHPUnit test suite",
-        "test:real": "Run the opt-in tests against a real Offline e-KYC file (see tests/Real)",
         "rector": "Run Rector to automatically refactor and modernise code",
         "test:coverage": "Run the PHPUnit test suite with code coverage reporting",
         "analyse": "Run static analysis using PHPStan",

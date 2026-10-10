@@ -8,7 +8,7 @@ use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Shakil\AadhaarOffline\AadhaarOfflineServiceProvider;
 use Shakil\AadhaarOffline\Facades\AadhaarOffline;
-use Shakil\AadhaarOffline\Tests\Support\Fixtures;
+use Shakil\AadhaarOffline\Testing\Fixtures;
 
 abstract class TestCase extends Orchestra
 {

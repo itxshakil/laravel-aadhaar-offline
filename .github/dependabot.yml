@@ -14,7 +14,7 @@ updates:
         patterns: ["*"]
 
   # Dev tooling is grouped and merges itself when CI passes (see dependabot-auto-merge.yml).
-  # Runtime dependencies (Laravel components, robrichards/xmlseclibs) get their own PRs
+  # Runtime dependencies (Laravel components and itxshakil/aadhaar-offline) get their own PRs
   # and always wait for a human: xmlseclibs does the signature checking.
   - package-ecosystem: composer
     directory: /
