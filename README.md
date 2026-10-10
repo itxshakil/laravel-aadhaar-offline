@@ -24,7 +24,7 @@
 **Don't trust the XML, verify it.** Many integrations accept whatever XML a KYC vendor returns, or whatever ZIP a user uploads, without checking the signature. Anyone can edit an XML file. This package checks the signature against UIDAI's public certificate before you rely on any of the data.
 
 > **Status: 0.x.** The test suite uses synthetic, self-signed fixtures.
-> The Offline e-KYC ZIP path has also been checked against a real 2026 UIDAI download.
+> The Offline e-KYC ZIP path has also been checked against a real 2026 UIDAI download and UIDAI's published `uidai_offline_publickey_2026.cer`.
 > Secure QR follows UIDAI's published layout and well-maintained open-source decoders, but has not yet been checked against a real card.
 > Before relying on it in production, run `php artisan aadhaar-offline:check` on a real file with the current UIDAI certificate.
 > Please [open an issue](https://github.com/itxshakil/laravel-aadhaar-offline/issues) if anything differs.
@@ -94,12 +94,13 @@ Publish the config file:
 php artisan vendor:publish --tag=aadhaar-offline-config
 ```
 
-Download the UIDAI public certificate used to sign Offline e-KYC XML and Secure QR codes.
-It's on uidai.gov.in under the Offline e-KYC / developer section.
-Add it with the fingerprint UIDAI publishes:
+Add the UIDAI public certificate that signs Offline e-KYC XML and Secure QR codes.
+UIDAI lists it on its [Data and Downloads page](https://uidai.gov.in/en/data-and-download) as `uidai_offline_publickey_2026.cer`:
 
 ```bash
-php artisan aadhaar-offline:add-cert /path/to/uidai_offline_publickey.cer --fingerprint="E0:30:..."
+php artisan aadhaar-offline:add-cert \
+    https://backend.uidai.gov.in/get/files/media/document/2026-07/uidai_offline_publickey_2026.cer \
+    --fingerprint="E0:30:4B:9E:61:EE:36:40:EC:DD:AE:2D:B4:B6:17:F2:E2:67:8F:57:DB:C2:82:6C:2F:86:AC:5C:04:F2:77:DF"
 ```
 
 This stores it in `storage/app/aadhaar-offline/certs` and adds it to `AADHAAR_OFFLINE_CERTIFICATES` in `.env`.

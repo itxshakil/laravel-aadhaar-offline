@@ -25,12 +25,28 @@ php artisan vendor:publish --tag=aadhaar-offline-config
 The package needs the UIDAI public certificate that signs Offline e-KYC XML and Secure QR codes.
 It doesn't ship one, for two reasons: UIDAI rotates certificates, and you should get trust anchors from the source yourself.
 
-1. Download the Offline e-KYC public certificate (`uidai_offline_publickey_*.cer`) from the UIDAI website (developer / Offline e-KYC section).
-2. Add it, passing the SHA-256 fingerprint UIDAI publishes:
+1. Find the current certificate on UIDAI's [Data and Downloads page](https://uidai.gov.in/en/data-and-download).
+   Offline e-KYC certificates are named `uidai_offline_publickey_*.cer`.
+2. Add it, passing the SHA-256 fingerprint:
 
 ```bash
-php artisan aadhaar-offline:add-cert /path/to/uidai_offline_publickey.cer --fingerprint="E0:30:4B:..."
+php artisan aadhaar-offline:add-cert \
+    https://backend.uidai.gov.in/get/files/media/document/2026-07/uidai_offline_publickey_2026.cer \
+    --fingerprint="E0:30:4B:9E:61:EE:36:40:EC:DD:AE:2D:B4:B6:17:F2:E2:67:8F:57:DB:C2:82:6C:2F:86:AC:5C:04:F2:77:DF"
 ```
+
+UIDAI moves files between URLs, so if the link above stops working, take the current one from the Data and Downloads page.
+
+Offline e-KYC certificates on that page, as checked on 2026-10-10:
+
+| File | Subject | Valid to | SHA-256 fingerprint |
+|------|---------|----------|---------------------|
+| `uidai_offline_publickey_2026.cer` | DS Unique Identification Authority of India 06 | 2029-02-03 | `E0:30:4B:9E:61:EE:36:40:EC:DD:AE:2D:B4:B6:17:F2:E2:67:8F:57:DB:C2:82:6C:2F:86:AC:5C:04:F2:77:DF` |
+| `uidai_offline_publickey_17022026.cer` | DS Unique Identification Authority of India 05 | 2026-02-16 | `00:57:3C:69:2C:F0:4F:BE:E1:13:AE:5F:D5:2F:2A:65:4D:36:1B:F8:EE:4D:06:C4:60:08:90:6B:36:DF:81:69` |
+| `uidai_offline_publickey_26022021.cer` | DS UNIQUE IDENTIFICATION AUTHORITY OF INDIA 05 | 2024-02-27 | `E0:F0:F8:69:D3:2E:FC:7E:80:FA:E2:22:37:17:A5:6D:CF:8B:61:6F:82:0B:54:2A:49:E5:BD:5A:BF:1C:0F:7D` |
+
+Offline e-KYC downloads made today are signed with the 2026 certificate.
+The expired ones only matter for Secure QR codes printed while they were current; add them with `--allow-expired`.
 
 The command accepts a path or an `https://` URL and PEM or DER files.
 It shows the certificate's subject, expiry and fingerprint, and refuses to continue if the fingerprint differs or the certificate has expired.
