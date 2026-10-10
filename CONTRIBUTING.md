@@ -106,7 +106,7 @@ Release notes and the next version number come from **intent labels**, which a m
 | `documentation`   | 📚 Documentation                                |
 | `skip-changelog`  | Left out of the release notes                   |
 
-Area labels (`core`, `parsing`, `verification`, `validation`, `config`, `events`, `console`, `service-provider`, `tests`, `ci`, `tooling`, `meta`) are added automatically from the changed paths.
+Area labels (`core`, `parsing`, `verification`, `validation`, `config`, `events`, `console`, `service-provider`, `tests`, `docs-area`, `composer`, `ci`, `tooling`, `meta`) are added automatically from the changed paths.
 They are for triage only: a path says where a change is, not what it does.
 
 ## License
