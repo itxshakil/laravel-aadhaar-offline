@@ -111,3 +111,16 @@ jobs:
                   dependency-versions: ${{ matrix.deps }}
 
             - run: vendor/bin/phpunit
+
+    # One stable check to require in branch protection, instead of every matrix
+    # job by name (those names change whenever the matrix does).
+    ci-passed:
+        name: CI passed
+        if: always()
+        needs: [lint, analyse, packagist, test]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Fail if any required job failed or was cancelled
+              if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+              run: exit 1
+            - run: echo "All CI jobs passed."
