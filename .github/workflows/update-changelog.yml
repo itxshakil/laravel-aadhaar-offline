@@ -1,0 +1,33 @@
+name: Update changelog
+
+# CHANGELOG.md is generated: publishing a GitHub release (drafted by
+# release-drafter.yml) writes its notes into the changelog and commits them.
+# Never edit CHANGELOG.md by hand.
+on:
+    release:
+        types: [published]
+
+permissions:
+    contents: write
+
+jobs:
+    update:
+        name: Write release notes to CHANGELOG.md
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  ref: main
+
+            - name: Update CHANGELOG.md
+              uses: stefanzweifel/changelog-updater-action@v1
+              with:
+                  latest-version: ${{ github.event.release.tag_name }}
+                  release-notes: ${{ github.event.release.body }}
+
+            - name: Commit CHANGELOG.md
+              uses: stefanzweifel/git-auto-commit-action@v7
+              with:
+                  branch: main
+                  commit_message: "docs: update CHANGELOG for ${{ github.event.release.tag_name }}"
+                  file_pattern: CHANGELOG.md
