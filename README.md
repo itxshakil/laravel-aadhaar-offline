@@ -49,6 +49,7 @@
 - [Testing](#testing)
 - [Artisan Commands](#artisan-commands)
 - [Error Handling](#error-handling)
+- [AI Assistants](#ai-assistants)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -421,6 +422,14 @@ Every exception extends `Shakil\AadhaarOffline\Exceptions\AadhaarOfflineExceptio
 | `InvalidSignatureException` | Missing, duplicated, edited or untrusted signature, on XML or QR |
 | `StaleKycException` | Older than `max_age_days` (XML) or `secure_qr.max_age_days` (QR) |
 | `ConfigurationException` | No certificate configured, certificate unreadable, or share code missing for hash matching |
+
+---
+
+## AI Assistants
+
+The package ships [Laravel Boost](https://laravel.com/docs/boost) guidelines in `resources/boost/guidelines/core.blade.php`.
+They tell AI coding agents to verify before trusting data, never trust the certificate inside a document, keep personal data out of logs and use `AadhaarOffline::fake()` in tests.
+Run `php artisan boost:install` and select `itxshakil/laravel-aadhaar-offline` when Boost lists third-party packages.
 
 ---
 
