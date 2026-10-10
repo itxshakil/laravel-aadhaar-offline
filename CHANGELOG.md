@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-10
+
+No code changes; the installed package is the same as 0.2.0.
+
+### Changed
+
+- Releases and `CHANGELOG.md` are maintained by hand; the automatic changelog workflow was removed.
+- `CHANGELOG.md` now matches the published releases.
+
 ## [0.2.0] - 2026-10-10
 
 Parsing and verification moved to the new framework-agnostic package [itxshakil/aadhaar-offline](https://github.com/itxshakil/aadhaar-offline), which this package now requires.
@@ -62,6 +71,7 @@ The Offline e-KYC ZIP path was checked against a real 2026 UIDAI download and UI
 - **Upload form**: the `<x-aadhaar-offline::upload-form>` Blade component.
 - **Testing helpers**: `AadhaarOffline::fake()` with assertions, and `OfflineKycFactory`.
 
-[Unreleased]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/itxshakil/laravel-aadhaar-offline/releases/tag/v0.1.0
