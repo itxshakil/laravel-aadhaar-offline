@@ -73,3 +73,9 @@
 /CHANGELOG.md          export-ignore
 /CONTRIBUTING.md       export-ignore
 /SECURITY.md           export-ignore
+
+# Only needed in the repository, not by people who install the package
+/.env.example          export-ignore
+/art                   export-ignore
+/testbench.yaml        export-ignore
+/RELEASING.md          export-ignore

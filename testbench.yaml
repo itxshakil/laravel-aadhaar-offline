@@ -1,0 +1,4 @@
+# Lets `vendor/bin/testbench` boot the package, e.g. to try a command on a real file:
+#   AADHAAR_OFFLINE_CERTIFICATES=/path/to/uidai.cer vendor/bin/testbench aadhaar-offline:check /path/to/offlineaadhaar.zip
+providers:
+  - Shakil\AadhaarOffline\AadhaarOfflineServiceProvider

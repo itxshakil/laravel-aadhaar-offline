@@ -1,6 +1,6 @@
 {
     "name": "itxshakil/laravel-aadhaar-offline",
-    "description": "Read and verify Aadhaar Offline e-KYC (share-code ZIP / signed XML) locally in Laravel: UIDAI signature checks, mobile/email hash matching, freshness rules and privacy-safe defaults.",
+    "description": "Read and verify Aadhaar Offline e-KYC (share-code ZIP / signed XML) and Secure QR codes locally in Laravel: UIDAI signature checks, mobile/email hash matching, freshness rules and privacy-safe defaults.",
     "keywords": [
         "laravel",
         "laravel-package",
@@ -12,18 +12,31 @@
         "ekyc",
         "kyc",
         "uidai",
+        "secure-qr",
+        "aadhaar-qr",
         "xml-signature",
         "verhoeff",
         "india",
         "fintech"
     ],
     "license": "MIT",
+    "homepage": "https://github.com/itxshakil/laravel-aadhaar-offline",
     "authors": [
         {
             "name": "Shakil Alam",
             "email": "itxshakil@gmail.com",
             "homepage": "https://github.com/itxshakil",
             "role": "Developer"
+        }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/itxshakil"
+        },
+        {
+            "type": "paypal",
+            "url": "https://paypal.me/itxshakil"
         }
     ],
     "require": {
