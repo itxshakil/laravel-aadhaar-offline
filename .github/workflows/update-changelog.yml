@@ -3,6 +3,11 @@ name: Update changelog
 # CHANGELOG.md is generated: publishing a GitHub release (drafted by
 # release-drafter.yml) writes its notes into the changelog and commits them.
 # Never edit CHANGELOG.md by hand.
+#
+# main requires the "CI passed" check, and on a personal repository GitHub Actions
+# cannot be allowed to bypass that. The commit is therefore pushed with
+# CHANGELOG_TOKEN: a fine-grained token of the repository admin with
+# "Contents: read and write" on this repository only (see RELEASING.md).
 on:
     release:
         types: [published]
@@ -15,9 +20,18 @@ jobs:
         name: Write release notes to CHANGELOG.md
         runs-on: ubuntu-latest
         steps:
+            - name: Require CHANGELOG_TOKEN
+              if: env.CHANGELOG_TOKEN == ''
+              env:
+                  CHANGELOG_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
+              run: |
+                  echo "::error::Set the CHANGELOG_TOKEN secret (see RELEASING.md); GITHUB_TOKEN cannot push past the main ruleset."
+                  exit 1
+
             - uses: actions/checkout@v7
               with:
                   ref: main
+                  token: ${{ secrets.CHANGELOG_TOKEN }}
 
             - name: Update CHANGELOG.md
               uses: stefanzweifel/changelog-updater-action@v1

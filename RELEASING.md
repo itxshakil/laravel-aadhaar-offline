@@ -22,8 +22,7 @@ gh api -X POST repos/itxshakil/laravel-aadhaar-offline/rulesets --input - <<'JSO
   "enforcement": "active",
   "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
   "bypass_actors": [
-    { "actor_type": "RepositoryRole", "actor_id": 5, "bypass_mode": "always" },
-    { "actor_type": "Integration", "actor_id": 15368, "bypass_mode": "always" }
+    { "actor_type": "RepositoryRole", "actor_id": 5, "bypass_mode": "always" }
   ],
   "rules": [
     { "type": "deletion" },
@@ -39,7 +38,16 @@ JSON
 
 Pull requests can only merge when the `CI passed` job is green, which lets Dependabot's grouped PRs merge themselves.
 Admins (actor 5) can still push straight to `main`.
-GitHub Actions (integration 15368) can still push the changelog commit made after each release.
+
+6. The `CHANGELOG_TOKEN` secret.
+   On a personal repository a ruleset cannot let GitHub Actions bypass the required check, so the changelog commit is pushed with an admin's token instead.
+   Create a [fine-grained token](https://github.com/settings/personal-access-tokens/new) as `itxshakil` with access to this repository only and the permission "Contents: Read and write", then:
+
+```bash
+gh secret set CHANGELOG_TOKEN --repo itxshakil/laravel-aadhaar-offline
+```
+
+   Renew it before it expires; the `Update changelog` workflow fails with a clear error when it is missing.
 
 ## Each release
 
