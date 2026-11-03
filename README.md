@@ -81,7 +81,7 @@ Not using Laravel? Install `itxshakil/aadhaar-offline` directly.
 | Requirement | Version |
 |-------------|---------|
 | PHP | ^8.3 with `ext-dom`, `ext-openssl`, `ext-zip`, `ext-zlib` |
-| Laravel | ^11.0 \| ^12.0 \| ^13.0 |
+| Laravel | ^12.0 \| ^13.0 |
 | UIDAI public certificate | Download from the UIDAI website ([see below](#configuration)) |
 
 ---
