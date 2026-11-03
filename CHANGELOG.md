@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-03
+
+### Removed
+
+- Laravel 11 support. Every Laravel 11 release now has an unpatched security advisory, and Composer refuses to install it by default. Stay on 0.2.x if you can't upgrade yet.
+
+### Changed
+
+- PHPUnit 13 is allowed alongside 11 and 12.
+
 ## [0.2.1] - 2026-10-10
 
 No code changes; the installed package is the same as 0.2.0.
@@ -71,7 +81,8 @@ The Offline e-KYC ZIP path was checked against a real 2026 UIDAI download and UI
 - **Upload form**: the `<x-aadhaar-offline::upload-form>` Blade component.
 - **Testing helpers**: `AadhaarOffline::fake()` with assertions, and `OfflineKycFactory`.
 
-[Unreleased]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/itxshakil/laravel-aadhaar-offline/releases/tag/v0.1.0

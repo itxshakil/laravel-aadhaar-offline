@@ -71,7 +71,7 @@ jobs:
         runs-on: ${{ matrix.os }}
 
         # Full PHP x Laravel x dependency matrix on Linux, so every supported Laravel
-        # major is tested (a "lowest" run alone resolves to Laravel 12, never 11).
+        # major is tested.
         # macOS and Windows only on the oldest and newest PHP with the newest Laravel,
         # which keeps macOS jobs under the free-plan concurrency limit.
         strategy:
@@ -79,12 +79,9 @@ jobs:
             matrix:
                 os: [ubuntu-latest]
                 php: [8.3, 8.4, 8.5]
-                laravel: [11, 12, 13]
+                laravel: [12, 13]
                 deps: [lowest, highest]
-                exclude:
-                    - { laravel: 11, php: 8.5 }
                 include:
-                    - { laravel: 11, testbench: "9.*" }
                     - { laravel: 12, testbench: "10.*" }
                     - { laravel: 13, testbench: "11.*" }
                     - { os: macos-latest, php: 8.3, laravel: 13, testbench: "11.*", deps: highest }
