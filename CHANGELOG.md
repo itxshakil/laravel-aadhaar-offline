@@ -81,7 +81,8 @@ The Offline e-KYC ZIP path was checked against a real 2026 UIDAI download and UI
 - **Upload form**: the `<x-aadhaar-offline::upload-form>` Blade component.
 - **Testing helpers**: `AadhaarOffline::fake()` with assertions, and `OfflineKycFactory`.
 
-[Unreleased]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/itxshakil/laravel-aadhaar-offline/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/itxshakil/laravel-aadhaar-offline/releases/tag/v0.1.0
